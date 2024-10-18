@@ -5,7 +5,11 @@ const app = express();
 
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://tfttracker.vercel.app' 
+}));
+
+
 const port = 4000
 
 app.get('/testAPI', async (req, res) => {
