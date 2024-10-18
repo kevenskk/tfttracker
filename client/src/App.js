@@ -15,7 +15,7 @@ function App() {
 
   function callAPI() {  
 
-    axios.get('https://tfttracker-server.vercel.app')
+    axios.get('https://tfttracker-server.vercel.app/testAPI')
     .then(res => setMessage(res.data))
     .catch(error => console.log(error))
 
