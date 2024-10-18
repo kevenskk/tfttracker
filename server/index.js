@@ -6,7 +6,9 @@ const app = express();
 
 
 app.use(cors({
-  origin: 'https://tfttracker.vercel.app' 
+  origin: 'https://tfttracker.vercel.app', 
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
 }));
 
 
