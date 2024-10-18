@@ -32,7 +32,7 @@ function App() {
     <div className="App">
       <header className="App-header">
        
-       <input type="text" placeholder="Enter your name" />  
+      <input type="puuid" onChange={e => setSummonerName(e.target.value)}></input>
        <button onClick={callAPI}>Call API</button>
        <p> {message} </p>
       </header>
