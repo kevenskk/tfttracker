@@ -12,12 +12,12 @@ function App() {
 
 
   const [message, setMessage] = useState("")
-  const [summonerName, setSummonerName] = useState("")  
+  const [summonerInput, setSummonerName] = useState("")  
 
-  function callAPI() {  
+  function callAPI(event) {  
     
 
-    const [summonerName, tagLine] = summonerName.split("#");
+    const [summonerName, tagLine] = summonerInput.split("#");
     
     axios.get('https://tfttracker-server.vercel.app/testAPI', {params: {summonerName: summonerName, tagLine: tagLine}})  
     .then(res => setMessage(res.data))
