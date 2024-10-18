@@ -10,13 +10,18 @@ const port = 4000
 
 app.get('/testAPI', async (req, res) => {
 
-  const puuid = await axios.get('https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/' + summonerName + '/' + tagLine + '?api_key=' + apiKey)
-  .then(res => res.data.puuid).
-  catch(error => console.log(error))  
+  const summonerName = req.query.summonerName;
+  const tagline = req.query.tagLine;
 
-  console.log(puuid)
+  await axios.get('https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/' + summonerName + '/' + tagLine + '?api_key=' + apiKey)
+    .then(response => {
+        console.log(response.data.puuid);
+    }).catch(error => {
+        console.log(error);
+    });
+
    
-  res.json(puuid)
+  res.json(response.data.puuid)
 })
 
 app.listen(port, () => {
