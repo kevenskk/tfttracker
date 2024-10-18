@@ -12,10 +12,14 @@ function App() {
 
 
   const [message, setMessage] = useState("")
+  const [summonerName, setSummonerName] = useState("")  
 
   function callAPI() {  
+    
 
-    axios.get('https://tfttracker-server.vercel.app/testAPI')
+    const [summonerName, tagLine] = summonerName.split("#");
+    
+    axios.get('https://tfttracker-server.vercel.app/testAPI', {params: {summonerName: summonerName, tagLine: tagLine}})  
     .then(res => setMessage(res.data))
     .catch(error => console.log(error))
 
@@ -28,7 +32,7 @@ function App() {
     <div className="App">
       <header className="App-header">
        
-
+       <input type="text" placeholder="Enter your name" />  
        <button onClick={callAPI}>Call API</button>
        <p> {message} </p>
       </header>
