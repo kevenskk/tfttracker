@@ -85,15 +85,9 @@ function App() {
                 <h2> Game {index +1} </h2>
                 <div>
                  {matchData.info.participants.map((data, pIndex)=>
-                  <p>  {data.augments}, {data.placement}, {data.companion.species}, {secondsToMinute(data.time_eliminated)} </p>
+                  <p>  {data.placement}, {data.companion.species}, {secondsToMinute(data.time_eliminated)} </p>
 
-                    /* 
-                    units
-                    tiers
-                    items
-                    traits
-                    
-                    */
+                 
                  
                  
                 )}
