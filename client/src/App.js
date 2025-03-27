@@ -25,9 +25,11 @@ function App() {
 
   // path to vercel
 
-  const vercelhost = 'https://tfttracker-server.vercel.app/matchData';  
+  const mDataVercel = 'https://tfttracker-server.vercel.app/matchData';  
 
+  const sDataVercel = 'https://tfttracker-server.vercel.app/summonerData'; 
 
+  const rDataVercel = 'https://tfttracker-server.vercel.app/rankedData'; 
 
 
 
@@ -37,16 +39,16 @@ function App() {
 
    
     
-    axios.get(localhost, {params: {summonerName: summonerName, tagLine: tagLine}})  
+    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})  
     .then(res => setMatchList(res.data))
     .catch(error => console.log(error))
      
-    axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine}})  
+    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})  
     .then(res => setSummonerData(res.data)
     )
     .catch(error => console.log(error))
 
-    axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine}})
+    axios.get(rDataVercela, {params: {summonerName: summonerName, tagLine: tagLine}})
     .then(res => {
       console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
