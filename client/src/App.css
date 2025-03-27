@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10vmin;
   pointer-events: none;
 }
 
@@ -24,6 +24,15 @@
   color: white;
 }
 
+.App input[type=puuid] {
+  float: center;
+  padding: 4px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -35,4 +44,27 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.App-header h2 {
+   font-size: 30px;
+
+
+}
+
+.search input[type=puuid] {
+  float: right;
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
+  
+}
+
+.App-header button{
+
+   
+
 }

@@ -8,7 +8,7 @@ require('dotenv').config();
 
 app.use(cors());
 
-
+app.use('/assets', express.static(__dirname + '/assets')) // Serve static files from the public directory
 
 const apiKey = process.env.apiKey;
 
@@ -18,7 +18,7 @@ function getPUUID(summonerName, tagLine){
    
   return axios.get('https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/' + summonerName + '/' + tagLine + '?api_key=' + apiKey)
   .then(response => {
-      console.log(response.data);
+   //   console.log(response.data);
       return response.data.puuid;
   }).catch(error => {
       console.log(error);
@@ -26,12 +26,15 @@ function getPUUID(summonerName, tagLine){
 
 }
 
+
+
+
 function getRiot(PUUID){
    
 
   return axios.get('https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/' + PUUID + '?api_key=' + apiKey)
   .then(response => {
-      console.log(response.data.gameName);
+    //  console.log(response.data.gameName);
       return response.data.gameName;
   }).catch(error => {
       console.log(error);
@@ -40,10 +43,23 @@ function getRiot(PUUID){
 
 }
 
+function getSummonerID(PUUID){
 
 
 
-app.get('/testAPI', async (req, res, next) => {
+
+  return axios.get('https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + PUUID + '?api_key=' + apiKey)
+  .then(response => {
+  //    console.log(response.data.id);
+      return response.data.id;
+    }).catch(error => {
+      console.log(error);
+  });
+
+}
+
+
+app.get('/matchData', async (req, res, next) => {
   
   const summonerName = req.query.summonerName;
   const tagline = req.query.tagLine;
@@ -51,13 +67,12 @@ app.get('/testAPI', async (req, res, next) => {
 
   const puuid = await getPUUID(summonerName, tagline);
    
-  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=1&api_key=' + apiKey)
+  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=5&api_key=' + apiKey)
   .then(response => response.data)
   .catch(err => err)
   
 
-  // console log match ids from puuid
-  console.log(matchIDs);
+ // console.log(matchIDs);
 
       var matchList = [];
 
@@ -67,11 +82,14 @@ app.get('/testAPI', async (req, res, next) => {
           .then(response => response.data)
           .catch(err => err)
            
-              
           
-          console.log(matchData);
 
-            
+
+
+         // console.log(matchData);
+
+        //console.log(matchData.info.participants[0].units.map(units => units.character_id)); // log placement of first participant
+
            
            
         
@@ -90,22 +108,68 @@ app.get('/testAPI', async (req, res, next) => {
 });
 
 
-app.get('/puuid', async (req, res, next) => {
+
+
+
+
+app.get('/summonerData', async (req, res, next) => {
+    
+     const summonerName = req.query.summonerName;
+     const tagline = req.query.tagLine
+ 
+     const puuid = await getPUUID(summonerName, tagline);
+
+      
+
+     
+  //  console.log(puuid);
+
   
 
-
-     const puuid = req.query.puuid;
-
-     const gameName = await axios.get("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid + "?api_key=" + apiKey)
-     .then(response => response.data.gameName).
-     catch(err => err);
-
-
-
-
-      res.json(gameName); // Send the JSON response back to the client */
+     const summonerData = await axios.get('https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + puuid + '?api_key=' + apiKey)
+     .then(response => response.data)
+     .catch(err => err)
+     
+    //console.log(summonerData); 
+     
+    res.json(summonerData); // Send the JSON response back to the client */
+    
   
 });
+
+app.get('/rankedData', async (req, res, next) => {
+    
+  const summonerName = req.query.summonerName;
+  const tagline = req.query.tagLine
+
+  const puuid = await getPUUID(summonerName, tagline);
+
+   
+
+  
+ //console.log(puuid);
+
+ 
+ const summonerID = await getSummonerID(puuid)
+
+  const rankedData = await axios.get('https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/' + summonerID + '?api_key=' + apiKey)
+  .then(response => response.data).catch(err => err)
+
+
+
+  const tftRankedData = rankedData.find(queue => queue.queueType === "RANKED_TFT");
+
+
+  
+ res.json(tftRankedData); // Send the JSON response back to the client */ 
+ 
+ console.log(tftRankedData); // Debugging
+
+});
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
