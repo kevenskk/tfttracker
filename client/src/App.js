@@ -48,7 +48,7 @@ function App() {
     )
     .catch(error => console.log(error))
 
-    axios.get(rDataVercela, {params: {summonerName: summonerName, tagLine: tagLine}})
+    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})
     .then(res => {
       console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
