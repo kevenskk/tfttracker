@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 
@@ -91,7 +92,7 @@ function App() {
         width="100"
         height="100"
       />
-      <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" />
+      <img src={"/assets/" + rankedData.tier + ".png" } width="100"  height="100" />
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
       <p> Wins: {rankedData.wins} Loss: {rankedData.losses} </p>
       <p> Win Rate: {((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(1)}%</p>      
