@@ -69,34 +69,55 @@ function App() {
      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`; // Format as MM:SS
     }
 
+  
 
+    function unixToDate(unixTimestamp) {
+
+      const date = new Date(unixTimestamp);
+      
+ 
+      
+      console.log(date.toString()); 
+      return date.toUTCString();
+
+    }
 
 
   return (
     <div className="App">
          
       <header className="App-header">
-
-
-        <div id = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
+      <div class = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
         <button onClick={getPlayerData}>Search</button>
         
         </div>
+      </header>
+       
     
        
       <>
   {summonerData.profileIconId ? (
     <>
+
+       <div className="summonerInfo">
       <img src={"https://ddragon.leagueoflegends.com/cdn/15.5.1/img/profileicon/" + summonerData.profileIconId +".png"}
         alt="profile icon"
         width="100"
-        height="100"
-      />
-      <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" />
+        height="100"/>
+
+      
+      
+      </div>
+       <div className = "rankInfo">
+      <img src={"http://localhost:4000/assets/" + rankedData.tier + ".png" } width="100"  height="100" />
+
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
-      <p> Wins: {rankedData.wins} Loss: {rankedData.losses} </p>
+      <p> Wins: {rankedData.wins} Loss: {rankedData.losses}    </p>
+      <p> Top 4 Rate: {rankedData.wins} </p>
       <p> Win Rate: {((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(1)}%</p>      
       <p> Games: {(rankedData.wins) + (rankedData.losses)}</p>
+
+      </div>
     </>
   ) : (
     console.log("No data available")
@@ -109,25 +130,30 @@ function App() {
 
        {matchList.length !== 0 ?
         <>
-           <p>Match History</p>
-           
+        
            {
              matchList.map((matchData, index) => 
-               <>
+               <React.Fragment key ={index}>
+                
 
-                <h2> Game {index +1} </h2>
+
+                
+
+                <p> {unixToDate(matchData.info.game_datetime)} </p>
+                <p>{secondsToMinute(matchData.info.game_length)}  </p>
+                 
                 <div>
                 {matchData.info.participants
             .sort((a, b) => a.placement - b.placement) // Sort participants by placement
             .map((data, pIndex) => (
-              <p key={pIndex}> {data.placement}, {data.riotIdGameName} </p>
+              <p key={pIndex}> {data.placement}, {data.riotIdGameName}, {matchData.info.participants[pIndex].units.map(units => units.character_id)} </p>
 
 
 
             ))}
         </div>
 
-               </>
+               </React.Fragment>
 
              )
            }
@@ -135,14 +161,15 @@ function App() {
         
         :
 
-        <>
-          <p>No matches found</p>
+        
+        console.log("No data available")
 
-        </>
+
+       
 
 
       }
-      </header>
+      
     </div>
   );
 }

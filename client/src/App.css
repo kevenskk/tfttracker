@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #ffffff;
 }
 
 .App-logo {
@@ -15,22 +16,8 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App input[type=puuid] {
-  float: center;
-  padding: 4px;
-  border: none;
-  margin-top: 8px;
-  margin-right: 16px;
-  font-size: 17px;
+  padding: 10px;
+ 
 }
 
 .App-link {
@@ -46,25 +33,78 @@
   }
 }
 
-
-.App-header h2 {
-   font-size: 30px;
-
-
-}
-
 .search input[type=puuid] {
-  float: right;
-  padding: 6px;
-  border: none;
-  margin-top: 8px;
-  margin-right: 16px;
-  font-size: 17px;
+ 
+    font-family: 'Montserrat', sans-serif;
+    outline: 0;
+    width: 33%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: 300;
+    background-color: rgba(255, 255, 255, 0.07);
+    color: white;
+
   
 }
 
-.App-header button{
+.search button{
+
+
+  font-family: 'Montserrat', sans-serif;
+  background: #3c31dd;
+  border: 0;
+  padding: 15px;
+  color: white;
+  font-size: 16px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+
+
+.search button:hover,
+.search button:active,
+.search button:focus {
+    background: #837bea;
+}
+
+
+.rankInfo {
+  font-family: 'Montserrat', sans-serif;
+
+  position: relative;
+  z-index: 1;
+  background-color: rgba(32, 39, 49, 0.13);
+  border-radius: 8px;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 
    
+
+}
+
+.summonerInfo {
+
+
+ 
+}
+
+.summonerInfo img {
+
+  border-radius: 50%;
+
+
 
 }
