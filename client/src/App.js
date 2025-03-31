@@ -185,7 +185,7 @@ function App() {
               <td>{data.placement}</td>
               <td> 
                 
-                <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png"} alt="Tactician" width="50" height="50" />
+                <img src={"https://tfttracker-server.vercel.app/assets/tft-tactician/" + getTacticianImage(data.companion.item_ID)} alt="Tactician" width="50" height="50" />
                 
                 
               </td>
