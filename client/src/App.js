@@ -186,7 +186,7 @@ function App() {
               <td> 
                 
                 <img src={"https://tfttracker-server.vercel.app/assets/tft-tactician/" + getTacticianImage(data.companion.item_ID)} alt="Tactician" width="50" height="50" />
-               
+                
                 
               </td>
               <td>{data.riotIdGameName}</td>
