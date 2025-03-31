@@ -10,6 +10,9 @@ app.use(cors());
 
 app.use('/assets', express.static(__dirname + '/assets')) // Serve static files from the public directory
 
+app.use('/assets/rank', express.static(__dirname + '/assets/rank')) // Serve static files from the public directory
+
+
 app.use('/assets/tft-champion', express.static(__dirname + '/assets/tft-champion')) // Serve static files from the public directory
 
 app.use('/assets/tft-tactician', express.static(__dirname + '/assets/tft-tactician')) // Serve static files from the public directory
