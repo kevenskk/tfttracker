@@ -127,7 +127,7 @@ function App() {
       
       </div>
        <div className = "rankInfo">
-      <img src={"https://tfttracker-server.vercel.app/assets/rank/" + rankedData.tier + ".png" } width="100"  height="100" alt= {rankedData.tier} />
+      <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" alt= {rankedData.tier} />
 
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
       <p> Wins: {rankedData.wins} Loss: {rankedData.losses}    </p>
