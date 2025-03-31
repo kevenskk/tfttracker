@@ -149,7 +149,6 @@ function App() {
       <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
         <button onClick={getPlayerData}>Search</button>
 
-        <button onClick={getChampionImage}>Champion</button>
          
 
        
@@ -162,19 +161,12 @@ function App() {
       <>
   {summonerData.profileIconId ? (
     <>
-
-       <div className="summonerInfo">
-      <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/profileicon/" + summonerData.profileIconId +".png"}
+       <div className = "rankInfo">
+       <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/profileicon/" + summonerData.profileIconId +".png"}
         alt="Profile icon"
         width="100"
         height="100"/>
 
-     
-
-      
-      
-      </div>
-       <div className = "rankInfo">
       <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" alt= {rankedData.tier} />
 
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
@@ -204,12 +196,16 @@ function App() {
 
                 
                  
-                <p> {unixToDate(matchData.info.game_datetime)} </p>
+                
 
-                <p>{secondsToMinute(matchData.info.game_length)}  </p>
+                  
                  
                 <div className = "matchInfo">
-                <table className= "matchTable">
+
+                <p> {unixToDate(matchData.info.game_datetime)} </p>
+                <p>  Game Duration: {secondsToMinute(matchData.info.game_length)} </p>
+
+                <table className= "matchTable" >
 
 
                   <thead>
@@ -233,7 +229,8 @@ function App() {
               <td>{data.placement}</td>
               <td> 
                 
-                <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} alt="Tactician" width="50" height="50" />
+                <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                alt="Tactician" width="60" height="60" />
                 
                 
               </td>
@@ -244,16 +241,26 @@ function App() {
                 
 
               {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id === "TFT13_Sion" ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
-              : 
+              const championImageSrc = units.character_id === "TFT13_Sion" 
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
+              : units.character_id === "TFT13_JayceSummon"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
+              : units.character_id === "TFT13_Viktor"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Viktor.png"
+              : units.character_id === "TFT13_MissMage"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
+              : units.character_id === "TFT13_Warwick"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
+              :
+
               "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
                   key={unitIndex}
                   src={championImageSrc}
                   alt={`Champion ${units.character_id || "Unknown"}`}
-                  width="50"
-                  height="50"
+                  width="60"
+                  height="60"
                 />
               );
             })}
