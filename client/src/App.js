@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import tactician from './tft-tactician.json';
+
 
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
@@ -17,7 +19,7 @@ function App() {
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
   // path to localhost 
-  const localhost = 'http://localhost:4000/matchData';
+  const mData = 'http://localhost:4000/matchData';
 
   const sData = 'http://localhost:4000/summonerData'; 
 
@@ -32,7 +34,10 @@ function App() {
 
   const rDataVercel = 'https://tfttracker-server.vercel.app/rankedData'; 
 
+  
 
+
+  
 
   function getPlayerData(event) {  
     
@@ -75,20 +80,31 @@ function App() {
 
       const date = new Date(unixTimestamp);
       
- 
-      
-      console.log(date.toString()); 
       return date.toUTCString();
-
+      
     }
+    
 
+    function getTacticianImage(tacticianID){
+    
+    
+      const response = tactician;
+
+      
+      console.log(response.data[tacticianID].image.full); // Debugging
+  
+      return response.data[tacticianID].image.full;
+    }
 
   return (
     <div className="App">
          
       <header className="App-header">
-      <div class = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
+      <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
         <button onClick={getPlayerData}>Search</button>
+
+        <button onClick={getTacticianImage}> Tactician </button>
+       
         
         </div>
       </header>
@@ -101,15 +117,17 @@ function App() {
 
        <div className="summonerInfo">
       <img src={"https://ddragon.leagueoflegends.com/cdn/15.5.1/img/profileicon/" + summonerData.profileIconId +".png"}
-        alt="profile icon"
+        alt="Profile icon"
         width="100"
         height="100"/>
+
+     
 
       
       
       </div>
        <div className = "rankInfo">
-      <img src={"http://localhost:4000/assets/" + rankedData.tier + ".png" } width="100"  height="100" />
+      <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" alt= {rankedData.tier} />
 
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
       <p> Wins: {rankedData.wins} Loss: {rankedData.losses}    </p>
@@ -125,11 +143,10 @@ function App() {
 </>
 
 
-       
-       
 
-       {matchList.length !== 0 ?
-        <>
+
+      
+        <React.Fragment>
         
            {
              matchList.map((matchData, index) => 
@@ -138,37 +155,59 @@ function App() {
 
 
                 
-
+                 
                 <p> {unixToDate(matchData.info.game_datetime)} </p>
+
                 <p>{secondsToMinute(matchData.info.game_length)}  </p>
                  
-                <div>
+                <div className = "matchInfo">
+                <table className= "matchTable">
+
+
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Tactitian</th>
+                      <th>Player</th>
+                      <th>Units</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
                 {matchData.info.participants
             .sort((a, b) => a.placement - b.placement) // Sort participants by placement
             .map((data, pIndex) => (
-              <p key={pIndex}> {data.placement}, {data.riotIdGameName}, {matchData.info.participants[pIndex].units.map(units => units.character_id)} </p>
 
 
+            
+             
+              <tr key={pIndex}>
+              <td>{data.placement}</td>
+              <td> 
+                
+                <img src={"https://tfttracker-server.vercel.app/assets/tft-tactician/" + getTacticianImage(data.companion.item_ID)} alt="Tactician" width="50" height="50" />
+               
+                
+              </td>
+              <td>{data.riotIdGameName}</td>
+              <td>
 
-            ))}
-        </div>
-
-               </React.Fragment>
-
+                
+                {data.units.map((unit, unitIndex) => (
+                  <span key={unitIndex}>{unit.character_id}</span>
+                ))}
+              </td>
+            </tr>
+             ))}
+            </tbody>
+            </table>
+          </div>
+         </React.Fragment>
              )
            }
-        </>
-        
-        :
+        </React.Fragment>
 
-        
-        console.log("No data available")
-
-
-       
-
-
-      }
+     
       
     </div>
   );

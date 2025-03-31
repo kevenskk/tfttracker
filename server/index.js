@@ -10,6 +10,11 @@ app.use(cors());
 
 app.use('/assets', express.static(__dirname + '/assets')) // Serve static files from the public directory
 
+app.use('/assets/tft-champion', express.static(__dirname + '/assets/tft-champion')) // Serve static files from the public directory
+
+app.use('/assets/tft-tactician', express.static(__dirname + '/assets/tft-tactician')) // Serve static files from the public directory
+
+
 const apiKey = process.env.apiKey;
 
 const port = 4000
@@ -66,7 +71,8 @@ app.get('/matchData', async (req, res, next) => {
 
 
   const puuid = await getPUUID(summonerName, tagline);
-   
+
+   // return 10 matches only
   const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=10&api_key=' + apiKey)
   .then(response => response.data)
   .catch(err => err)
@@ -76,7 +82,7 @@ app.get('/matchData', async (req, res, next) => {
 
       var matchList = [];
 
-      for(var i = 0; i < matchIDs.length; i++){ // return 5 matches only
+      for(var i = 0; i < matchIDs.length; i++){ 
           const matchID = matchIDs[i];
           const matchData = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/' + matchID + '?api_key=' + apiKey)
           .then(response => response.data)
@@ -102,7 +108,7 @@ app.get('/matchData', async (req, res, next) => {
       
      
 
-
+      
       res.json(matchList); // Send the JSON response back to the client */
       
 
@@ -165,7 +171,7 @@ app.get('/rankedData', async (req, res, next) => {
 
 
   
-  res.json(tftRankedData); // Send the JSON response back to the client */ 
+ res.json(tftRankedData); // Send the JSON response back to the client */ 
  
  console.log(tftRankedData); // Debugging
 
