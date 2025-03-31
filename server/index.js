@@ -74,12 +74,12 @@ app.get('/matchData', async (req, res, next) => {
   const puuid = await getPUUID(summonerName, tagline);
 
    // return 10 matches only
-  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=10&api_key=' + apiKey)
+  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=1&api_key=' + apiKey)
   .then(response => response.data)
   .catch(err => err)
   
 
- // console.log(matchIDs);
+      console.log(matchIDs);
 
       var matchList = [];
 
@@ -93,14 +93,14 @@ app.get('/matchData', async (req, res, next) => {
 
 
 
-         // console.log(matchData);
 
-        console.log(matchData.info.participants[0].units.map(units => units.character_id)); // log placement of first participant
+        //console.log(matchData.info.participants[0].units.map(units => units.character_id)); // log placement of first participant
 
            
            
         
          
+         // console.log(matchData);
 
 
           matchList.push(matchData);
