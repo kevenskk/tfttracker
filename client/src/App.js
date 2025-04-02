@@ -1,7 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import tactician from './tft-tactician.json';
-import champion from './tft-champion.json';
+
+
+import champion15_6_1 from './tft-champion-15.6.1.json';
+import champion15_7_1 from './tft-champion-15.7.1.json';
 
 
 import axios from 'axios';
@@ -19,6 +22,10 @@ function App() {
 
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
+
+  const [championJson, setChampionJSON] = useState(null);
+
+
   // path to localhost 
   const mData = 'http://localhost:4000/matchData';
 
@@ -37,7 +44,10 @@ function App() {
 
   
 
-  
+  // return jsons from DataDragon CDN
+
+
+  const tacticianJSONPath = 'http://localhost:4000/getTacticianJSON';
   
 
   function getPlayerData(event) {  
@@ -90,51 +100,130 @@ function App() {
     
     
       const response = tactician;
-
       
-      //console.log(response.data[tacticianID].image.full); // Debugging
+      try{
+
+       // console.log(tacticianID);
+
+       
+      
+      //  console.log(response.data[tacticianID].image.full); // Debugging
   
-      return response.data[tacticianID].image.full;
+        return response.data[tacticianID].image.full;
+
+      }catch(error){
+        console.error("Error fetching tactician image:", error);
+
+         
+
+
+      }
+      
     }
+    
     
    
 
-    function getChampionImage(championID){
 
+
+    
+    
+
+    useEffect(() => {
+          
+
+      async function fetchChampionJson(){
+
+
+   
+        try{
+   
+           const response = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
+   
+           if(!response.ok){
+             throw new Error("Could not fetch JSON");
+   
+   
+           }
+
+          
+   
+           const data = await response.json();
+           setChampionJSON(data);
+         
+        }catch(error){
+   
+         console.error(error);
+   
+   
+   
+        }
+   
+   
+       }
+       
+
+       fetchChampionJson();
+
+
+
+    })
+
+   
+   
+    
+    
+   function getChampionImage(championID){
+
+      const response = champion15_7_1; // import tft-champion.json
 
       try{
-
-        const response = champion; // import tft-champion.json
-    
-    
-
-        const championIDString = championID.toString();
-  
-        const first3Chars = championIDString.substring(0, 3);
-  
-        const first3CharsCapitalized = first3Chars.toUpperCase(); 
-              
-        const remainingLetters = championIDString.slice(3);
         
-        const seventhChar = remainingLetters.charAt(3).toUpperCase() + remainingLetters.slice(4); // Capitalize the 7th character
+           
+          const first3Chars = championID.substring(0, 3);
   
-        const championIDPath = first3CharsCapitalized + remainingLetters.slice(0,3) + seventhChar; // Capitalize the 7th character
+          const first3CharsCapitalized = first3Chars.toUpperCase(); 
+                
+          const remainingLetters = championID.slice(3);
+          
+          const seventhChar = remainingLetters.charAt(3).toUpperCase() + remainingLetters.slice(4); // Capitalize the 7th character
+    
+          const championIDPath = first3CharsCapitalized + remainingLetters.slice(0,3) + seventhChar; 
+
+         // console.log(championIDPath);
+
+    
+        if(championIDPath.includes('TFT14') ){
+          return response.data['Maps/Shipping/Map22/Sets/TFTSet14/Shop/' + championIDPath].image.full;
+             
+
+
+        } else if(championIDPath.includes('TFT13')){
+
         
-        console.log(championIDPath); // Debugging
-  
-  
-      //  console.log(response.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full); // Debugging
+        // const fetch = fetchJson();
+        //  const newResponse =  champion15_6_1;
+
+          return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
+
+          
+        }
        
-        return response.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
 
-        
+
 
       }catch (error){
          
         
-
+       
         console.error("Error fetching champion image:", error);
       } 
+      
+        
+       
+
+    
+      
       
     } 
    
@@ -146,14 +235,23 @@ function App() {
     <div className="App">
          
       <header className="App-header">
+
+       
+
       <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
         <button onClick={getPlayerData}>Search</button>
 
-         
+
+
+       
+
+        
 
        
         
         </div>
+
+      
       </header>
        
     
@@ -162,18 +260,38 @@ function App() {
   {summonerData.profileIconId ? (
     <>
        <div className = "rankInfo">
-       <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/profileicon/" + summonerData.profileIconId +".png"}
+       <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/profileicon/" + summonerData.profileIconId +".png"}
         alt="Profile icon"
         width="100"
         height="100"/>
-
-      <img src={"https://tfttracker-server.vercel.app/assets/" + rankedData.tier + ".png" } width="100"  height="100" alt= {rankedData.tier} />
-
+      
+      
+      {rankedData.tier ? (
+    <img
+      src={
+        "https://tfttracker-server.vercel.app/assets/" +
+        rankedData.tier +
+        ".png"
+      }
+      width="100"
+      height="100"
+      alt={rankedData.tier}
+    />
+  ) : (
+    <img
+      src="https://tfttracker-server.vercel.app/assets/unranked.png" // Fallback image for unranked players
+      width="100"
+      height="100"
+      alt="Unranked"
+    />
+  )}
+       
       <p> Rank: {rankedData.tier} {rankedData.rank} </p>
       <p> Wins: {rankedData.wins} Loss: {rankedData.losses}    </p>
       <p> Top 4 Rate: {rankedData.wins} </p>
       <p> Win Rate: {((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(1)}%</p>      
       <p> Games: {(rankedData.wins) + (rankedData.losses)}</p>
+
 
       </div>
     </>
@@ -229,7 +347,7 @@ function App() {
               <td>{data.placement}</td>
               <td> 
                 
-                <img src={"https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
                 alt="Tactician" width="60" height="60" />
                 
                 
@@ -251,9 +369,11 @@ function App() {
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
               : units.character_id === "TFT13_Warwick"
               ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
+              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
               :
 
-              "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id);
+              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
                   key={unitIndex}

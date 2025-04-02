@@ -74,7 +74,7 @@ app.get('/matchData', async (req, res, next) => {
   const puuid = await getPUUID(summonerName, tagline);
 
    // return 10 matches only
-  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=10&api_key=' + apiKey)
+  const matchIDs = await axios.get('https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=5&api_key=' + apiKey)
   .then(response => response.data)
   .catch(err => err)
   
@@ -177,6 +177,8 @@ app.get('/rankedData', async (req, res, next) => {
  console.log(tftRankedData); // Debugging
 
 });
+
+
 
 
 
