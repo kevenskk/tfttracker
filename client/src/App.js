@@ -3,8 +3,7 @@ import './App.css';
 import tactician from './tft-tactician.json';
 
 
-import champion15_6_1 from './tft-champion-15.6.1.json';
-import champion15_7_1 from './tft-champion-15.7.1.json';
+
 
 
 import axios from 'axios';
@@ -18,12 +17,14 @@ function App() {
   const [input, setInput]= useState("")  // input for summoner search
 
   const [matchList, setMatchList] = useState([]) // store match data
-  const [puuid, setPuuid] = useState("")  
+  
 
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
 
   const [championJson, setChampionJSON] = useState(null);
+  const [currentChampionJson, setCurrentChampionJSON] = useState(null);
+
 
 
   // path to localhost 
@@ -44,10 +45,7 @@ function App() {
 
   
 
-  // return jsons from DataDragon CDN
-
-
-  const tacticianJSONPath = 'http://localhost:4000/getTacticianJSON';
+ 
   
 
   function getPlayerData(event) {  
@@ -139,33 +137,37 @@ function App() {
         try{
    
            const response = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
+
+
+           const currentResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/15.7.1/data/en_GB/tft-champion.json');
    
            if(!response.ok){
              throw new Error("Could not fetch JSON");
    
    
            }
-
+          
           
    
            const data = await response.json();
+           const current = await currentResponse.json();
            setChampionJSON(data);
+           setCurrentChampionJSON(current);
          
         }catch(error){
    
-         console.error(error);
    
    
    
         }
+
+        
    
    
        }
        
 
        fetchChampionJson();
-
-
 
     })
 
@@ -175,34 +177,28 @@ function App() {
     
    function getChampionImage(championID){
 
-      const response = champion15_7_1; // import tft-champion.json
 
       try{
-        
-           
-          const first3Chars = championID.substring(0, 3);
-  
-          const first3CharsCapitalized = first3Chars.toUpperCase(); 
-                
-          const remainingLetters = championID.slice(3);
-          
-          const seventhChar = remainingLetters.charAt(3).toUpperCase() + remainingLetters.slice(4); // Capitalize the 7th character
-    
-          const championIDPath = first3CharsCapitalized + remainingLetters.slice(0,3) + seventhChar; 
 
-         // console.log(championIDPath);
+
+        const first3Chars = championID.substring(0, 3);
+  
+        const first3CharsCapitalized = first3Chars.toUpperCase(); 
+                
+        const remainingLetters = championID.slice(3);
+          
+        const seventhChar = remainingLetters.charAt(3).toUpperCase() + remainingLetters.slice(4); // Capitalize the 7th character
+    
+        const championIDPath = first3CharsCapitalized + remainingLetters.slice(0,3) + seventhChar; 
+
 
     
         if(championIDPath.includes('TFT14') ){
-          return response.data['Maps/Shipping/Map22/Sets/TFTSet14/Shop/' + championIDPath].image.full;
+          return currentChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet14/Shop/' + championIDPath].image.full;
              
 
 
         } else if(championIDPath.includes('TFT13')){
-
-        
-        // const fetch = fetchJson();
-        //  const newResponse =  champion15_6_1;
 
           return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
 
