@@ -2,8 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import tactician from './tft-tactician.json';
 
-
-
+import trait from './tft-trait.json'
 
 
 import axios from 'axios';
@@ -24,8 +23,7 @@ function App() {
 
   const [championJson, setChampionJSON] = useState(null);
   const [currentChampionJson, setCurrentChampionJSON] = useState(null);
-
-
+ 
 
   // path to localhost 
   const mData = 'http://localhost:4000/matchData';
@@ -118,6 +116,8 @@ function App() {
       }
       
     }
+
+    
     
     
    
@@ -140,6 +140,7 @@ function App() {
 
 
            const currentResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/15.7.1/data/en_GB/tft-champion.json');
+
    
            if(!response.ok){
              throw new Error("Could not fetch JSON");
@@ -168,12 +169,13 @@ function App() {
        
 
        fetchChampionJson();
+       console.log('fetch');
 
-    })
+    }, [])
 
    
    
-    
+  
     
    function getChampionImage(championID){
 
@@ -222,6 +224,19 @@ function App() {
       
       
     } 
+
+
+    function getTraitImage(traitID){
+         
+       const response = trait;
+      // console.log(trait.data[traitID].image.full);
+
+       return trait.data[traitID].image.full;
+      
+
+
+
+    }
    
 
 
@@ -229,26 +244,19 @@ function App() {
 
   return (
     <div className="App">
+
+
+          <header className= "App-header">
+          
+          <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
+          <button onClick={getPlayerData}>Search</button>
+        
+          </div>
+          
+          
+          </header>
          
-      <header className="App-header">
-
-       
-
-      <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
-        <button onClick={getPlayerData}>Search</button>
-
-
-
-       
-
-        
-
-       
-        
-        </div>
-
-      
-      </header>
+     
        
     
        
@@ -282,11 +290,42 @@ function App() {
     />
   )}
        
-      <p> Rank: {rankedData.tier} {rankedData.rank} </p>
-      <p> Wins: {rankedData.wins} Loss: {rankedData.losses}    </p>
+      
+       {rankedData.tier & rankedData.rank ? (
+      <p>
+       Rank: {rankedData.tier} {rankedData.rank}       
+      </p>
+  
+     ) : (
+     <p>  Rank: {'Unranked'} </p>
+    )}
+      
+    
+
+      
+      <p> Wins: {rankedData.wins}     </p>
+      <p> Losses:  {rankedData.losses}</p>
       <p> Top 4 Rate: {rankedData.wins} </p>
+
+      {rankedData.wins || rankedData.losses ? (
+    <p>
       <p> Win Rate: {((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(1)}%</p>      
-      <p> Games: {(rankedData.wins) + (rankedData.losses)}</p>
+      </p>
+  
+     ) : (
+     <p>  Win Rate: {0} </p>
+    )}
+
+
+      {rankedData.wins || rankedData.losses ? (
+    <p>
+      Games:  {(rankedData.wins) + (rankedData.losses)}
+    </p>
+  
+    ) : (
+     <p> Games: {0} </p>
+    )}
+  
 
 
       </div>
@@ -305,19 +344,13 @@ function App() {
            {
              matchList.map((matchData, index) => 
                <React.Fragment key ={index}>
+          
                 
-
-
-                
-                 
-                
-
-                  
                  
                 <div className = "matchInfo">
-
                 <p> {unixToDate(matchData.info.game_datetime)} </p>
                 <p>  Game Duration: {secondsToMinute(matchData.info.game_length)} </p>
+                
 
                 <table className= "matchTable" >
 
@@ -327,6 +360,7 @@ function App() {
                       <th>#</th>
                       <th>Tactician</th>
                       <th>Player</th>
+                      <th>Eliminated</th>
                       <th>Units</th>
                     </tr>
                   </thead>
@@ -342,18 +376,18 @@ function App() {
               <tr key={pIndex}>
               <td>{data.placement}</td>
               <td> 
-                
-                <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
-                alt="Tactician" width="60" height="60" />
-                
+                 <div className ='tactician'>   <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                alt="Tactician" width="60" height="60" /> </div>  
                 
               </td>
               <td>{data.riotIdGameName}</td>
+              <td> {secondsToMinute(data.time_eliminated)}</td>
+
               <td>
                 
 
                 
-
+              <div className = 'units'>
               {data.units.map((units, unitIndex) => {
               const championImageSrc = units.character_id === "TFT13_Sion" 
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
@@ -367,21 +401,27 @@ function App() {
               ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
               : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
+              : units.character_id.includes('TFT14_Summon_Turret')
+              ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
               :
-
               "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
                   key={unitIndex}
                   src={championImageSrc}
-                  alt={`Champion ${units.character_id || "Unknown"}`}
-                  width="60"
-                  height="60"
+                  alt={`${units.character_id || "Unknown"}`}
+                  width="50"
+                  height="50"
+                  
                 />
               );
             })}
- 
+                </div>
               </td>
+
+              
+
+              
             </tr>
              ))}
             </tbody>
