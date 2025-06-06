@@ -20,6 +20,8 @@ function App() {
 
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
+  const [server, setServer] = useState("europe"); // store server data
+
 
   const [championJson, setChampionJSON] = useState(null);
   const [currentChampionJson, setCurrentChampionJSON] = useState(null);
@@ -49,19 +51,19 @@ function App() {
   function getPlayerData(event) {  
     
     const [summonerName, tagLine] = input.split("#");
-
+    
    
     
-    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})  
+    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setMatchList(res.data))
     .catch(error => console.log(error))
      
-    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})  
+    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setSummonerData(res.data)
     )
     .catch(error => console.log(error))
 
-    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine}})
+    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
@@ -248,9 +250,16 @@ function App() {
 
           <header className= "App-header">
           
-          <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
+          <div className = "search">  <input type="puuid" placeholder="Search Player#Tagline" onChange={e => setInput(e.target.value)}></input>
           <button onClick={getPlayerData}>Search</button>
-        
+          <select value={server} onChange={e => setServer(e.target.value)}>
+            <option value="europe" selected>EUW</option>
+            <option value="americas" selected>NA</option>
+         
+
+
+
+          </select> 
           </div>
           
           
@@ -348,8 +357,12 @@ function App() {
                 
                  
                 <div className = "matchInfo">
+                  
+                <div className = "gametime">     
                 <p> {unixToDate(matchData.info.game_datetime)} </p>
                 <p>  Game Duration: {secondsToMinute(matchData.info.game_length)} </p>
+                </div>
+           
                 
 
                 <table className= "matchTable" >
