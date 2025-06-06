@@ -54,16 +54,16 @@ function App() {
     
    
     
-    axios.get(mData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setMatchList(res.data))
     .catch(error => console.log(error))
      
-    axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setSummonerData(res.data)
     )
     .catch(error => console.log(error))
 
-    axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
