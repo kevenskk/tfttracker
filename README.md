@@ -1,6 +1,7 @@
 TFT Tracker
 
 A hobby project being developed leveraging the Riot API, the webapp allows the user to view any player's match history as well as their statistics (rank, win/loss percentage, top 4 rate, number of games played, etc.)
+<br>
 The frontend is built using React, Tailwind, furthermore the backend uses Node.js and Express.js as a proxy server to perform API calls to the Riot API for player information.
 <br>
 
