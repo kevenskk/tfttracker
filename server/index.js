@@ -128,12 +128,14 @@ app.get('/summonerData', async (req, res, next) => {
      switch(server){
 
       case 'europe':
-        region = 'euw1';
+        region = 'euw1'
+        break;
       case 'americas':
-        region = 'na1';
+        region = 'na1'
+        break;
       
 
-      break;
+      
      }
 
   
@@ -142,7 +144,7 @@ app.get('/summonerData', async (req, res, next) => {
      .then(response => response.data)
      .catch(err => err)
      
-    //console.log(summonerData); 
+    console.log(summonerData); 
 
 
      
@@ -167,9 +169,14 @@ app.get('/rankedData', async (req, res, next) => {
  switch(server){
 
       case 'europe':
-        region = 'euw1';
+        region = 'euw1'
+        break;
+      case 'americas':
+        region = 'na1'
+        break;
+      
 
-      break;
+      
      }
 
  const summonerID = await getSummonerID(puuid,region)

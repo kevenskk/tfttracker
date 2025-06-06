@@ -54,16 +54,16 @@ function App() {
     
    
     
-    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(mData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setMatchList(res.data))
     .catch(error => console.log(error))
      
-    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setSummonerData(res.data)
     )
     .catch(error => console.log(error))
 
-    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
@@ -250,12 +250,12 @@ function App() {
 
           <header className= "App-header">
           
-          <div className = "search">  <input type="puuid" placeholder="Search Player#Tagline" onChange={e => setInput(e.target.value)}></input>
+          <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
           <button onClick={getPlayerData}>Search</button>
           <select value={server} onChange={e => setServer(e.target.value)}>
             <option value="europe" selected>EUW</option>
             <option value="americas" selected>NA</option>
-         
+
 
 
 
