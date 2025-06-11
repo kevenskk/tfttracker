@@ -46,8 +46,9 @@ function getSummonerID(PUUID, region){
 
   return axios.get('https://'+region+'.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + PUUID + '?api_key=' + apiKey)
   .then(response => {
-  //    console.log(response.data.id);
+      console.log(response.data.id);
       return response.data.id;
+      
     }).catch(error => {
       console.log(error);
   });
@@ -65,7 +66,7 @@ app.get('/matchData', async (req, res, next) => {
   const puuid = await getPUUID(summonerName, tagline, server);
 
    // return 10 matches only
-  const matchIDs = await axios.get('https://'+server+'.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=5&api_key=' + apiKey)
+  const matchIDs = await axios.get('https://'+server+'.api.riotgames.com/tft/match/v1/matches/by-puuid/' + puuid + '/ids?start=0&count=10&api_key=' + apiKey)
   .then(response => response.data)
   .catch(err => err)
   
@@ -187,7 +188,7 @@ app.get('/rankedData', async (req, res, next) => {
 
 
   const tftRankedData = rankedData.find(queue => queue.queueType === "RANKED_TFT");
-
+ 
 
   
  res.json(tftRankedData); // Send the JSON response back to the client */ 

@@ -25,7 +25,8 @@ function App() {
 
   const [championJson, setChampionJSON] = useState(null);
   const [currentChampionJson, setCurrentChampionJSON] = useState(null);
- 
+  const [tacticianJSON, setTacticianJSON] = useState(null);
+  const [latestPatch, setLatestPatchVersion] = useState(null);
 
   // path to localhost 
   const mData = 'http://localhost:4000/matchData';
@@ -42,6 +43,8 @@ function App() {
   const sDataVercel = 'https://tfttracker-server.vercel.app/summonerData'; 
 
   const rDataVercel = 'https://tfttracker-server.vercel.app/rankedData'; 
+
+  
 
   
 
@@ -97,8 +100,8 @@ function App() {
     function getTacticianImage(tacticianID){
     
     
-      const response = tactician;
-      
+      const response = tacticianJSON;
+       
       try{
 
        // console.log(tacticianID);
@@ -130,20 +133,30 @@ function App() {
     
 
     useEffect(() => {
+
+     
+        
+      async function fetchJSON(){
+
+       try{
+           const Patchresponse = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
+
+           const latestPatchVersion = await Patchresponse.json(); 
+
+           setLatestPatchVersion(latestPatchVersion[0]); // Set the latest patch version
+
+           console.log(latestPatchVersion[0]); // Debugging
+
+
+           const response = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
+           
+
+           const currentResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
+
+           const tacticianResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-tactician.json');
+
           
 
-      async function fetchChampionJson(){
-
-
-   
-        try{
-   
-           const response = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
-
-
-           const currentResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/15.7.1/data/en_GB/tft-champion.json');
-
-   
            if(!response.ok){
              throw new Error("Could not fetch JSON");
    
@@ -154,8 +167,15 @@ function App() {
    
            const data = await response.json();
            const current = await currentResponse.json();
+           const tactician = await tacticianResponse.json();
+           
+           
            setChampionJSON(data);
            setCurrentChampionJSON(current);
+           setTacticianJSON(tactician);
+           
+           
+
          
         }catch(error){
    
@@ -169,9 +189,7 @@ function App() {
    
        }
        
-
-       fetchChampionJson();
-       console.log('fetch');
+       fetchJSON();
 
     }, [])
 
@@ -273,7 +291,7 @@ function App() {
   {summonerData.profileIconId ? (
     <>
        <div className = "rankInfo">
-       <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/profileicon/" + summonerData.profileIconId +".png"}
+       <img src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/profileicon/" + summonerData.profileIconId +".png"}
         alt="Profile icon"
         width="100"
         height="100"/>
@@ -300,21 +318,21 @@ function App() {
   )}
        
       
-       {rankedData.tier & rankedData.rank ? (
+          {rankedData.tier && rankedData.rank ? (
       <p>
-       Rank: {rankedData.tier} {rankedData.rank}       
+        {rankedData.tier} {rankedData.rank} {rankedData.leaguePoints} LP
       </p>
-  
-     ) : (
-     <p>  Rank: {'Unranked'} </p>
+    ) : (
+      <p> Unranked</p>
     )}
+      
+      <p> Wins: {rankedData.wins}     </p>
+      <p> Losses:  {rankedData.losses}</p>
       
     
 
       
-      <p> Wins: {rankedData.wins}     </p>
-      <p> Losses:  {rankedData.losses}</p>
-      <p> Top 4 Rate: {rankedData.wins} </p>
+     
 
       {rankedData.wins || rankedData.losses ? (
     <p>
@@ -335,7 +353,9 @@ function App() {
      <p> Games: {0} </p>
     )}
   
-
+     <p> Avg. Placement
+      
+     </p>
 
       </div>
     </>
@@ -389,7 +409,7 @@ function App() {
               <tr key={pIndex}>
               <td>{data.placement}</td>
               <td> 
-                 <div className ='tactician'>   <img src={"https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                 <div className ='tactician'>   <img src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
                 alt="Tactician" width="60" height="60" /> </div>  
                 
               </td>
@@ -402,22 +422,11 @@ function App() {
                 
               <div className = 'units'>
               {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id === "TFT13_Sion" 
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
-              : units.character_id === "TFT13_JayceSummon"
-              ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
-              : units.character_id === "TFT13_Viktor"
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Viktor.png"
-              : units.character_id === "TFT13_MissMage"
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
-              : units.character_id === "TFT13_Warwick"
-              ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
-              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
-              : units.character_id.includes('TFT14_Summon_Turret')
+              const championImageSrc = units.character_id.includes('TFT14_Summon_Turret')
+              
               ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
               :
-              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
+              "https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
                   key={unitIndex}
