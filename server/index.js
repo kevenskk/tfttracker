@@ -134,8 +134,7 @@ app.get('/summonerData', async (req, res, next) => {
       case 'americas':
         region = 'na1'
         break;
-      
-
+    
       
      }
 

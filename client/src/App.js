@@ -1,10 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import tactician from './tft-tactician.json';
-
-import trait from './tft-trait.json'
-
-
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 
@@ -98,19 +93,12 @@ function App() {
     
 
     function getTacticianImage(tacticianID){
-    
-    
-      const response = tacticianJSON;
-       
       try{
 
        // console.log(tacticianID);
-
-       
-      
-      //  console.log(response.data[tacticianID].image.full); // Debugging
+       //  console.log(response.data[tacticianID].image.full); // Debugging
   
-        return response.data[tacticianID].image.full;
+        return tacticianJSON.data[tacticianID].image.full;
 
       }catch(error){
         console.error("Error fetching tactician image:", error);
@@ -122,16 +110,7 @@ function App() {
       
     }
 
-    
-    
-    
-   
-
-
-
-    
-    
-
+  
     useEffect(() => {
 
      
@@ -148,44 +127,40 @@ function App() {
            console.log(latestPatchVersion[0]); // Debugging
 
 
-           const response = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
+           const Set13 = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
+
            
 
-           const currentResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
+           const CurrentSet = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
 
            const tacticianResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-tactician.json');
 
           
 
-           if(!response.ok){
-             throw new Error("Could not fetch JSON");
+           if(!Set13.ok || !CurrentSet.ok || !tacticianResponse.ok){
+             throw new Error("Could not fetch the requested JSON:" + Set13.status + " " + CurrentSet.status + " " + tacticianResponse.status);
    
    
            }
           
           
    
-           const data = await response.json();
-           const current = await currentResponse.json();
+           const Set13JSON = await Set13.json();
+           const CurrentSetJSON = await CurrentSet.json(); // retrieve the current set's champion data/assets
            const tactician = await tacticianResponse.json();
            
            
-           setChampionJSON(data);
-           setCurrentChampionJSON(current);
+           setChampionJSON(Set13JSON);
+           setCurrentChampionJSON(CurrentSetJSON);
            setTacticianJSON(tactician);
            
            
 
          
         }catch(error){
-   
-   
-   
+          console.error("Error fetching JSON data:", error);
    
         }
-
-        
-   
    
        }
        
@@ -194,11 +169,11 @@ function App() {
     }, [])
 
    
-   
-  
+
+
+    // Function to get the champion image based on the champion ID
     
    function getChampionImage(championID){
-
 
       try{
 
@@ -221,9 +196,9 @@ function App() {
 
 
         } else if(championIDPath.includes('TFT13')){
-
+          console.log(championIDPath);
           return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
-
+          
           
         }
        
@@ -247,20 +222,9 @@ function App() {
 
 
     function getTraitImage(traitID){
-         
-       const response = trait;
-      // console.log(trait.data[traitID].image.full);
-
-       return trait.data[traitID].image.full;
-      
-
-
-
+        
     }
-   
-
-
-
+  
 
   return (
     <div className="App">
@@ -268,24 +232,16 @@ function App() {
 
           <header className= "App-header">
           
-          <div className = "search">  <input type="puuid" placeholder="Search Player#Tag(EUW)" onChange={e => setInput(e.target.value)}></input>
+          <div className = "search">  <input type="puuid" placeholder="Search Player#Tag and select Region" onChange={e => setInput(e.target.value)}></input>
           <button onClick={getPlayerData}>Search</button>
           <select value={server} onChange={e => setServer(e.target.value)}>
             <option value="europe" selected>EUW</option>
             <option value="americas" selected>NA</option>
 
-
-
-
           </select> 
           </div>
           
-          
           </header>
-         
-     
-       
-    
        
       <>
   {summonerData.profileIconId ? (
@@ -363,10 +319,6 @@ function App() {
     console.log("No data available")
   )}
 </>
-
-
-
-
       
         <React.Fragment>
         
@@ -386,8 +338,6 @@ function App() {
                 
 
                 <table className= "matchTable" >
-
-
                   <thead>
                     <tr>
                       <th>#</th>
@@ -403,46 +353,48 @@ function App() {
             .sort((a, b) => a.placement - b.placement) // Sort participants by placement
             .map((data, pIndex) => (
 
-
-            
-             
               <tr key={pIndex}>
               <td>{data.placement}</td>
               <td> 
                  <div className ='tactician'>   <img src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
-                alt="Tactician" width="60" height="60" /> </div>  
+                alt="Tactician" width="64" height="64" /> </div>  
                 
               </td>
               <td>{data.riotIdGameName}</td>
               <td> {secondsToMinute(data.time_eliminated)}</td>
 
               <td>
-                
-
-                
               <div className = 'units'>
               {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id.includes('TFT14_Summon_Turret')
-              
+              const championImageSrc = units.character_id === "TFT13_Sion" 
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
+              : units.character_id === "TFT13_JayceSummon"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
+              : units.character_id === "TFT13_Viktor"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Viktor.png"
+              : units.character_id === "TFT13_MissMage"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
+              : units.character_id === "TFT13_Warwick"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
+              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
+              : units.character_id.includes('TFT14_Summon_Turret')
               ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
               :
-              "https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-champion/" + getChampionImage(units.character_id);
+              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
                   key={unitIndex}
                   src={championImageSrc}
                   alt={`${units.character_id || "Unknown"}`}
-                  width="50"
-                  height="50"
+                  width="64"
+                  height="64"
                   
                 />
               );
             })}
                 </div>
               </td>
-
-              
-
               
             </tr>
              ))}
@@ -454,7 +406,6 @@ function App() {
            }
         </React.Fragment>
 
-     
       
     </div>
   );

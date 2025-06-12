@@ -139,12 +139,22 @@
 }
 
 
+
+
+
+.matchInfo table td .units,
+.matchInfo table td .traits,
+.matchInfo table td .tactician {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2px; /* optional: space between images */
+}
+
 .matchInfo p {
   font-family: 'Montserrat', sans-serif;
   
-
   
-    
 }
 
 
@@ -170,6 +180,8 @@
 
 
 }
+
+
 .matchInfo table td .tactician img {
   border-radius: 56px;
   border: 2px solid rgb(202, 147, 114);
