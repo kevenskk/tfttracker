@@ -46,7 +46,7 @@ function getSummonerID(PUUID, region){
 
   return axios.get('https://'+region+'.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + PUUID + '?api_key=' + apiKey)
   .then(response => {
-      console.log(response.data.id);
+      //console.log(response.data.id);
       return response.data.id;
       
     }).catch(error => {
@@ -144,7 +144,7 @@ app.get('/summonerData', async (req, res, next) => {
      .then(response => response.data)
      .catch(err => err)
      
-    console.log(summonerData); 
+    //console.log(summonerData); 
 
 
      
@@ -179,18 +179,18 @@ app.get('/rankedData', async (req, res, next) => {
       
      }
 
- const summonerID = await getSummonerID(puuid,region)
+  //const summonerID = await getSummonerID(puuid,region)
 
-  const rankedData = await axios.get('https://'+region+'.api.riotgames.com/tft/league/v1/entries/by-summoner/' + summonerID + '?api_key=' + apiKey)
+  const rankedData = await axios.get('https://'+region+'.api.riotgames.com/tft/league/v1/by-puuid/' + puuid + '?api_key=' + apiKey)
   .then(response => response.data).catch(err => err)
 
 
-
+  console.log(rankedData); // Debugging 
   const tftRankedData = rankedData.find(queue => queue.queueType === "RANKED_TFT");
- 
+  
 
   
- res.json(tftRankedData); // Send the JSON response back to the client */ 
+  res.json(tftRankedData); // Send the JSON response back to the client */ 
  
  //console.log(tftRankedData); // Debugging
 

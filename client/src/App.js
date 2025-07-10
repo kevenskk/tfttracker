@@ -63,7 +63,7 @@ function App() {
 
     axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
-      console.log("Ranked Data Response:", res.data); // Debugging
+      //console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
     })
     .catch(error => console.log(error));
@@ -124,7 +124,7 @@ function App() {
 
            setLatestPatchVersion(latestPatchVersion[0]); // Set the latest patch version
 
-           console.log(latestPatchVersion[0]); // Debugging
+           //console.log(latestPatchVersion[0]); // Debugging
 
 
            const Set13 = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
@@ -196,7 +196,7 @@ function App() {
 
 
         } else if(championIDPath.includes('TFT13')){
-          console.log(championIDPath);
+          //console.log(championIDPath);
           return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
           
           
@@ -240,6 +240,11 @@ function App() {
 
           </select> 
           </div>
+
+
+          <h1 className="text-4xl font-extrabold text-center text-blue-700 tracking-tight mt-6 mb-4 drop-shadow-lg">
+      Hello, Tailwind CSS!
+     </h1>
           
           </header>
        
@@ -316,6 +321,7 @@ function App() {
       </div>
     </>
   ) : (
+   
     console.log("No data available")
   )}
 </>
