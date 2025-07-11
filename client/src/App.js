@@ -233,7 +233,7 @@ function App() {
           <header className= "App-header">
           
           <div className = "search">  <input type="puuid" placeholder="Search Player#Tag and select Region" onChange={e => setInput(e.target.value)}></input>
-          <button onClick={getPlayerData}>Search</button>
+          <button className = "hover:scale-110 duration:500" onClick={getPlayerData}>Search</button>
           <select value={server} onChange={e => setServer(e.target.value)}>
             <option value="europe" selected>EUW</option>
             <option value="americas" selected>NA</option>
@@ -242,9 +242,14 @@ function App() {
           </div>
 
 
-          <h1 className="text-4xl font-extrabold text-center text-blue-700 tracking-tight mt-6 mb-4 drop-shadow-lg">
-      Hello, Tailwind CSS!
-     </h1>
+
+
+
+          
+
+           
+
+          
           
           </header>
        
@@ -252,7 +257,9 @@ function App() {
   {summonerData.profileIconId ? (
     <>
        <div className = "rankInfo">
-       <img src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/profileicon/" + summonerData.profileIconId +".png"}
+       <img 
+        className = "rounded-full border-4 border-orange-200 border-x-orange-400" 
+        src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/profileicon/" + summonerData.profileIconId +".png"}
         alt="Profile icon"
         width="100"
         height="100"/>
@@ -325,53 +332,34 @@ function App() {
     console.log("No data available")
   )}
 </>
-      
-        <React.Fragment>
-        
-           {
-             matchList.map((matchData, index) => 
-               <React.Fragment key ={index}>
-          
-                
-                 
-                <div className = "matchInfo">
-                  
-                <div className = "gametime">     
-                <p> {unixToDate(matchData.info.game_datetime)} </p>
-                <p>  Game Duration: {secondsToMinute(matchData.info.game_length)} </p>
-                </div>
-           
-                
+         
+             
 
-                <table className= "matchTable" >
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Tactician</th>
-                      <th>Player</th>
-                      <th>Eliminated</th>
-                      <th>Units</th>
-                    </tr>
-                  </thead>
+       {/* {matchList.map((matchData, index) =>
+  <div key={index}>
 
-                  <tbody>
-                {matchData.info.participants
-            .sort((a, b) => a.placement - b.placement) // Sort participants by placement
-            .map((data, pIndex) => (
 
-              <tr key={pIndex}>
-              <td>{data.placement}</td>
-              <td> 
-                 <div className ='tactician'>   <img src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
-                alt="Tactician" width="64" height="64" /> </div>  
-                
-              </td>
-              <td>{data.riotIdGameName}</td>
-              <td> {secondsToMinute(data.time_eliminated)}</td>
 
-              <td>
-              <div className = 'units'>
-              {data.units.map((units, unitIndex) => {
+    <div className = "font-Montserrat text-yellow-600 mb-10">
+      <p>{unixToDate(matchData.info.game_datetime)}</p>
+      <p>Game Duration: {secondsToMinute(matchData.info.game_length)}</p>
+      </div>
+
+      <div >
+         {matchData.info.participants.sort((a, b) => a.placement - b.placement).map((data) =>
+      <div className =  "grid grid-cols-5 h-20  content-start font-Montserrat text-gray-800 ">
+       
+
+        <div className = "font-semibold font-montserrat ">{data.placement}</div>
+        <div className = "flex justify-start"> {data.riotIdGameName}</div>
+        <div className ='flex justify-start'>   
+        <img className = "rounded-md border-4 border-orange-200 border-x-orange-400 h-16 w-16"
+        src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+        alt="Tactician image" 
+         /> 
+        </div>  
+        <div class = "flex justify-start"> {secondsToMinute(data.time_eliminated)}</div>
+        <div className = "flex flex-row flex-wrap items-center gap-1"> {data.units.map((units, unitIndex) => {
               const championImageSrc = units.character_id === "TFT13_Sion" 
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
               : units.character_id === "TFT13_JayceSummon"
@@ -398,6 +386,104 @@ function App() {
                   
                 />
               );
+            })}</div>
+
+        
+
+        
+    
+      </div>
+)}
+       
+        
+       
+
+
+        </div>
+    
+  </div>
+)}
+         */}
+        
+
+
+
+        <React.Fragment>
+        
+           {
+             matchList.map((matchData, index) => 
+               <React.Fragment key ={index}>
+          
+                
+                 
+                <div className = "matchInfo overflow-auto rounded-lg shadow">
+                
+                {/* <div className = "font-montserrat">     
+                <p> {unixToDate(matchData.info.game_datetime)} </p>
+                <p>  Duration: {secondsToMinute(matchData.info.game_length)} </p>
+                
+                </div> */}
+           
+                
+
+                <table className= "w-full" >
+                  <thead class = "bg-gray-50 border-b-2 border-gray-200">
+                    <tr className = "font-montserrat">
+                      <th class = "w-5 p-3 text-sm font-montserrat font-[600] tracking-wide text-left">No.</th>
+                      <th class = "w-5 p-3 text-sm font-montserrat font-[600] tracking-wide text-left">Tactician</th>
+                      <th class = "w-20 p-3 text-sm font-montserrat font-[600] tracking-wide text-left">Player</th>
+                      <th class = "w-20 p-3 text-sm font-montserrat font-[600] tracking-wide text-left">Elim</th>
+                      <th class = "w-50 p-3 text-sm font-montserrat font-[600] tracking-wide text-left" >Units</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                {matchData.info.participants
+            .sort((a, b) => a.placement - b.placement) // Sort participants by placement
+            .map((data, pIndex) => (
+
+              <tr class = {pIndex % 2 === 0 ? "bg-white" : "bg-grey whitespace-nowrap" } key={pIndex}>
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap">{data.placement}</td>
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap"> 
+                 <div >   
+                  <img className ='rounded-md border-4 border-orange-200 border-x-orange-400 h-16 w-16 ml-1' src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                alt="Tactician" 
+                 /> </div>  
+                
+              </td>
+              <td className = "p-3 text-sm text-gray-700 hover:underline whitespace-nowrap">{data.riotIdGameName}</td>
+              <td class = "p-3 text-sm text-gray-700 whitespace-nowrap"> {secondsToMinute(data.time_eliminated)}</td>
+
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap">
+              <div className = 'units'>
+              {data.units.map((units, unitIndex) => {
+              const championImageSrc = units.character_id === "TFT13_Sion" 
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
+              : units.character_id === "TFT13_JayceSummon"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
+              : units.character_id === "TFT13_Viktor"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Viktor.png"
+              : units.character_id === "TFT13_MissMage"
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
+              : units.character_id === "TFT13_Warwick"
+              ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
+              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
+              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
+              : units.character_id.includes('TFT14_Summon_Turret')
+              ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
+              :
+              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
+              return (
+                <img
+                  className = "rounded-md border-4 border-orange-200 border-x-orange-400"
+                  key={unitIndex}
+                  src={championImageSrc}
+                  alt={`${units.character_id || "Unknown"}`}
+                  height = "128"
+                  width=  "128"
+                  
+                />
+              );
             })}
                 </div>
               </td>
@@ -415,6 +501,7 @@ function App() {
       
     </div>
   );
+
 }
 
 export default App;
