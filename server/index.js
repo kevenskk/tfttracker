@@ -4,21 +4,15 @@ const axios = require('axios');
 const app = express();  
 require('dotenv').config();
 
+const apiKey = process.env.apiKey;
 
+const port = 4000
 
 app.use(cors());
 
 app.use('/assets', express.static(__dirname + '/assets')) // Serve static files from the public directory
 
 
-//app.use('/assets/tft-champion', express.static(__dirname + '/assets/tft-champion')) // Serve static files from the public directory
-
-//app.use('/assets/tft-tactician', express.static(__dirname + '/assets/tft-tactician')) // Serve static files from the public directory
-
-
-const apiKey = process.env.apiKey;
-
-const port = 4000
 
 
 
@@ -36,24 +30,55 @@ function getPUUID(summonerName, tagLine, server) {
 
 
 
+app.get('/test', async(req,res,next) => {
+    
+    //  http://localhost:4000/test?summonerName=concernedape&tagLine=0001&server=europe
 
 
+     const summonerName = req.query.summonerName;
+     const tagline = req.query.tagLine
+     const server = req.query.server;
+ 
+     const puuid = await getPUUID(summonerName, tagline, server);
+     
 
-function getSummonerID(PUUID, region){
+      switch(server){
 
-  
-
-
-  return axios.get('https://'+region+'.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + PUUID + '?api_key=' + apiKey)
-  .then(response => {
-      //console.log(response.data.id);
-      return response.data.id;
+      case 'europe':
+        region = 'euw1'
+        break;
+      case 'americas':
+        region = 'na1'
+        break;
+    
       
-    }).catch(error => {
-      console.log(error);
-  });
+     }
 
-}
+      
+
+
+    
+
+     const summonerData = await axios.get('https://'+region+'.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/' + puuid + '?api_key=' + apiKey)
+     .then(response => response.data)
+     .catch(err => err)
+     
+    //console.log(summonerData); 
+
+     
+
+        res.status(200).json(summonerData)
+
+
+        
+      
+      
+
+
+
+
+})
+
 
 
 app.get('/matchData', async (req, res, next) => {
@@ -147,7 +172,7 @@ app.get('/summonerData', async (req, res, next) => {
     //console.log(summonerData); 
 
 
-     
+  
     res.json(summonerData); // Send the JSON response back to the client */
     
   
@@ -206,15 +231,3 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-/*function getRiot(PUUID){  
-   
-  return axios.get('https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/' + PUUID + '?api_key=' + apiKey)
-  .then(response => {
-      console.log(response.data.gameName);
-      return response.data.gameName;
-  }).catch(error => {
-      console.log(error);
-  });
-
-
-} */

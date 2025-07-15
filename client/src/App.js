@@ -52,16 +52,16 @@ function App() {
     
    
     
-    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(mData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setMatchList(res.data))
     .catch(error => console.log(error))
      
-    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+    axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
     .then(res => setSummonerData(res.data)
     )
     .catch(error => console.log(error))
 
-    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       //console.log("Ranked Data Response:", res.data); // Debugging
       setRankedData(res.data);
@@ -238,6 +238,8 @@ function App() {
             <option value="europe" selected>EUW</option>
             <option value="americas" selected>NA</option>
 
+        
+
           </select> 
           </div>
 
@@ -252,6 +254,8 @@ function App() {
           
           
           </header>
+
+          <a href="http://localhost:4000/test?summonerName=concernedape&tagLine=0001&server=europe">Visit W3Schools</a>
        
       <>
   {summonerData.profileIconId ? (
@@ -426,7 +430,7 @@ function App() {
            
                 
 
-                <table className= "w-full" >
+                <table className= "w-full " >
                   <thead class = "bg-gray-50 border-b-2 border-gray-200">
                     <tr className = "font-montserrat">
                       <th class = "w-5 p-3 text-sm font-montserrat font-[600] tracking-wide text-left">No.</th>
@@ -442,22 +446,26 @@ function App() {
             .sort((a, b) => a.placement - b.placement) // Sort participants by placement
             .map((data, pIndex) => (
 
-              <tr class = {pIndex % 2 === 0 ? "bg-white" : "bg-grey whitespace-nowrap" } key={pIndex}>
-              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap">{data.placement}</td>
-              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap"> 
+              <tr class = {pIndex % 2 === 0 ? "bg-blue-100" : "bg-grey whitespace-nowrap" } key={pIndex}>
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap gap-4">{data.placement}</td>
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap gap-4"> 
                  <div >   
-                  <img className ='rounded-md border-4 border-orange-200 border-x-orange-400 h-16 w-16 ml-1' src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
+                  <img className ='rounded-md border-4 border-orange-200 border-x-orange-400 h-16 w-16' src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
                 alt="Tactician" 
                  /> </div>  
                 
               </td>
-              <td className = "p-3 text-sm text-gray-700 hover:underline whitespace-nowrap">{data.riotIdGameName}</td>
-              <td class = "p-3 text-sm text-gray-700 whitespace-nowrap"> {secondsToMinute(data.time_eliminated)}</td>
+              <td className = "p-3 text-sm text-gray-700 hover:underline whitespace-nowrap gap-4">
+                
+                
+               {data.riotIdGameName}</td>
+              <td class = "p-3 text-sm text-gray-700 whitespace-nowrap gap-4"> {secondsToMinute(data.time_eliminated)}</td>
 
-              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap">
-              <div className = 'units'>
+              <td className = "p-3 text-sm text-gray-700 whitespace-nowrap gap-4">
+              <div className = 'flex flex-wrap gap-4'>
               {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id === "TFT13_Sion" 
+              const championImageSrc = units.character_id === 
+              "TFT13_Sion" 
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
               : units.character_id === "TFT13_JayceSummon"
               ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
@@ -475,12 +483,12 @@ function App() {
               "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
               return (
                 <img
-                  className = "rounded-md border-4 border-orange-200 border-x-orange-400"
+                  className = "rounded-md border-4 border-orange-200 border-x-orange-400 h-32 w-32"
                   key={unitIndex}
                   src={championImageSrc}
                   alt={`${units.character_id || "Unknown"}`}
-                  height = "128"
-                  width=  "128"
+                  loading="lazy"
+                  
                   
                 />
               );
