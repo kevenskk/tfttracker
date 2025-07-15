@@ -11,5 +11,4 @@ The webapp can be found at - https://tfttracker.vercel.app/
 
 
 ![Screenshot 2025-06-06 133546](https://github.com/user-attachments/assets/0ea28b70-d245-43f6-a062-c68d7d607429)
-
-<img width="2551" height="1242" alt="Screenshot 2025-07-13 194008" src="https://github.com/user-attachments/assets/8bdc52d0-5d92-46d1-a5b4-984a4b246dba" />
+<img width="2534" height="1188" alt="image" src="https://github.com/user-attachments/assets/e4ded595-5fa2-42de-8acd-aa4d76ad6ded" />
