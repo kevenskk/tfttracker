@@ -40,8 +40,8 @@ function App() {
   const rDataVercel = 'https://tfttracker-server.vercel.app/rankedData'; 
 
   
-
-  
+  const allData = 'http://localhost:4000/allData'; // path to all data endpoint
+  const allDataVercel = 'https://tfttracker-server.vercel.app/allData'; // path to all data endpoint on vercel
 
  
   
@@ -49,24 +49,70 @@ function App() {
   function getPlayerData(event) {  
     
     const [summonerName, tagLine] = input.split("#");
+
+
+    if(!input.trim()){
+
+
+      alert("Please enter a player name and tag!");
+      return;
+    }
     
+
+    axios.get(allDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    .then(res => {
+      setMatchList(res.data.matchList);
+      setSummonerData(res.data.summonerData);
+     
+      setRankedData(res.data.tftRankedData);
+    }).catch(error => {
+      if (error.response && error.response.status === 429) {
+        alert("Too many requests. Please wait and try again.");
+      } else {
+        console.log(error);
+      }
+    });
+
+
+
+     
+  // }
    
     
-    axios.get(mDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
-    .then(res => setMatchList(res.data))
-    .catch(error => console.log(error))
+  //   axios.get(mData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+  //   .then(res => setMatchList(res.data))
+  //   .catch(error => {
+  //   if (error.response && error.response.status === 429) {
+  //     alert("Too many requests. Please wait and try again.");
+  //   } else {
+  //     console.log(error);
+  //   }
+  // });
      
-    axios.get(sDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
-    .then(res => setSummonerData(res.data)
-    )
-    .catch(error => console.log(error))
+  //   axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
+  //   .then(res => setSummonerData(res.data)
+  //   )
+  //   .catch(error => {
+  //   if (error.response && error.response.status === 429) {
+  //     alert("Too many requests. Please wait and try again.");
+  //   } else {
+  //     console.log(error);
+  //   }
+  // });
 
-    axios.get(rDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
-    .then(res => {
-      //console.log("Ranked Data Response:", res.data); // Debugging
-      setRankedData(res.data);
-    })
-    .catch(error => console.log(error));
+  //   axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+  //   .then(res => {
+  //     //console.log("Ranked Data Response:", res.data); // Debugging
+  //     setRankedData(res.data);
+  //     console.log("Ranked Data:", res.data); // Debugging
+  //   })
+  //   .catch(error => {
+  //   if (error.response && error.response.status === 429) {
+  //     alert("Too many requests. Please wait and try again.");
+  //   } else {
+  //     console.log(error);
+  //   }
+  // });
 
     
                  
@@ -255,7 +301,7 @@ function App() {
           
           </header>
 
-          <a href="http://localhost:4000/test?summonerName=concernedape&tagLine=0001&server=europe">Visit W3Schools</a>
+          
        
       <>
   {summonerData.profileIconId ? (
@@ -269,7 +315,7 @@ function App() {
         height="100"/>
       
       
-      {rankedData.tier ? (
+      {rankedData && rankedData.tier ? (
     <img
       src={
         "https://tfttracker-server.vercel.app/assets/" +
@@ -290,7 +336,7 @@ function App() {
   )}
        
       
-          {rankedData.tier && rankedData.rank ? (
+          {rankedData && rankedData.tier && rankedData.rank  ? (
       <p>
         {rankedData.tier} {rankedData.rank} {rankedData.leaguePoints} LP
       </p>
@@ -298,15 +344,15 @@ function App() {
       <p> Unranked</p>
     )}
       
-      <p> Wins: {rankedData.wins}     </p>
-      <p> Losses:  {rankedData.losses}</p>
+      <p> Wins: {rankedData && rankedData.wins ? rankedData.wins : 0}     </p>
+      <p> Losses:  {rankedData && rankedData.losses ? rankedData.losses : 0}</p>
       
     
 
       
      
 
-      {rankedData.wins || rankedData.losses ? (
+      {rankedData && (rankedData.wins || rankedData.losses) ? (
     <p>
       <p> Win Rate: {((rankedData.wins / (rankedData.wins + rankedData.losses)) * 100).toFixed(1)}%</p>      
       </p>
@@ -316,7 +362,7 @@ function App() {
     )}
 
 
-      {rankedData.wins || rankedData.losses ? (
+      {rankedData && (rankedData.wins || rankedData.losses) ?(
     <p>
       Games:  {(rankedData.wins) + (rankedData.losses)}
     </p>
@@ -325,9 +371,7 @@ function App() {
      <p> Games: {0} </p>
     )}
   
-     <p> Avg. Placement
-      
-     </p>
+     
 
       </div>
     </>
@@ -422,11 +466,11 @@ function App() {
                  
                 <div className = "matchInfo overflow-auto rounded-lg shadow">
                 
-                {/* <div className = "font-montserrat">     
+                <div className = "font-montserrat text-center font-semibold text-gray-800 p-10">     
                 <p> {unixToDate(matchData.info.game_datetime)} </p>
                 <p>  Duration: {secondsToMinute(matchData.info.game_length)} </p>
                 
-                </div> */}
+                </div>
            
                 
 
@@ -481,9 +525,33 @@ function App() {
               ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
               :
               "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
+              
+              let unitborder = "border-gray-400";
+
+
+            switch (units.rarity) {
+                    case 0:
+                      unitborder = "border-gray-400"; // Gray
+                      break;
+                    case 1:
+                      unitborder = "border-green-400"; // Green
+                      break;
+                    case 2:
+                     unitborder= "border-blue-400"; // Blue
+                      break;
+                    case 4:
+                      unitborder = "border-purple-500"; // Purple
+                      break;
+                    case 6:
+                      unitborder = "border-yellow-400"; // Yellow/Gold
+                      break;
+                    default:
+                      unitborder = "border-gray-400";
+                  }
+              
               return (
                 <img
-                  className = "rounded-md border-4 border-orange-200 border-x-orange-400 h-32 w-32"
+                  className = {`rounded-md border-[5px] ${unitborder} h-32 w-32`}
                   key={unitIndex}
                   src={championImageSrc}
                   alt={`${units.character_id || "Unknown"}`}
