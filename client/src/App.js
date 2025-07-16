@@ -11,39 +11,26 @@ function App() {
   const [input, setInput]= useState("")  // input for summoner search
 
   const [matchList, setMatchList] = useState([]) // store match data
-  
-
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
-  const [server, setServer] = useState("europe"); // store server data
+  const [doubleUpData, setDoubleUpData] = useState([]) // store double up data
 
+
+
+  const [server, setServer] = useState("europe"); // store server data
+  const [rankedSelection, setRankedSelection] = useState("ranked"); // store ranked selection data
 
   const [championJson, setChampionJSON] = useState(null);
   const [currentChampionJson, setCurrentChampionJSON] = useState(null);
   const [tacticianJSON, setTacticianJSON] = useState(null);
   const [latestPatch, setLatestPatchVersion] = useState(null);
 
-  // path to localhost 
-  const mData = 'http://localhost:4000/matchData';
+  // path to localhost / vercel
 
-  const sData = 'http://localhost:4000/summonerData'; 
-
-  const rData = 'http://localhost:4000/rankedData'; 
-
-
-  // path to vercel
-
-  const mDataVercel = 'https://tfttracker-server.vercel.app/matchData';  
-
-  const sDataVercel = 'https://tfttracker-server.vercel.app/summonerData'; 
-
-  const rDataVercel = 'https://tfttracker-server.vercel.app/rankedData'; 
+  const allData = 'http://localhost:4000/allData'; 
+  const allDataVercel = 'https://tfttracker-server.vercel.app/allData'; 
 
   
-  const allData = 'http://localhost:4000/allData'; // path to all data endpoint
-  const allDataVercel = 'https://tfttracker-server.vercel.app/allData'; // path to all data endpoint on vercel
-
- 
   
 
   function getPlayerData(event) {  
@@ -63,7 +50,7 @@ function App() {
     .then(res => {
       setMatchList(res.data.matchList);
       setSummonerData(res.data.summonerData);
-     
+      setDoubleUpData(res.data.tftDoubleUpRankedData);
       setRankedData(res.data.tftRankedData);
     }).catch(error => {
       if (error.response && error.response.status === 429) {
@@ -73,48 +60,6 @@ function App() {
       }
     });
 
-
-
-     
-  // }
-   
-    
-  //   axios.get(mData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
-  //   .then(res => setMatchList(res.data))
-  //   .catch(error => {
-  //   if (error.response && error.response.status === 429) {
-  //     alert("Too many requests. Please wait and try again.");
-  //   } else {
-  //     console.log(error);
-  //   }
-  // });
-     
-  //   axios.get(sData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})  
-  //   .then(res => setSummonerData(res.data)
-  //   )
-  //   .catch(error => {
-  //   if (error.response && error.response.status === 429) {
-  //     alert("Too many requests. Please wait and try again.");
-  //   } else {
-  //     console.log(error);
-  //   }
-  // });
-
-  //   axios.get(rData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
-  //   .then(res => {
-  //     //console.log("Ranked Data Response:", res.data); // Debugging
-  //     setRankedData(res.data);
-  //     console.log("Ranked Data:", res.data); // Debugging
-  //   })
-  //   .catch(error => {
-  //   if (error.response && error.response.status === 429) {
-  //     alert("Too many requests. Please wait and try again.");
-  //   } else {
-  //     console.log(error);
-  //   }
-  // });
-
-    
                  
   }
 
@@ -123,7 +68,7 @@ function App() {
   function secondsToMinute(seconds){
      let minutes = Math.floor(seconds/60);  
      let remainingSeconds = Math.floor(seconds % 60);
-  
+    
      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`; // Format as MM:SS
     }
 
@@ -140,17 +85,10 @@ function App() {
 
     function getTacticianImage(tacticianID){
       try{
-
-       // console.log(tacticianID);
-       //  console.log(response.data[tacticianID].image.full); // Debugging
-  
         return tacticianJSON.data[tacticianID].image.full;
 
       }catch(error){
         console.error("Error fetching tactician image:", error);
-
-         
-
 
       }
       
@@ -170,8 +108,6 @@ function App() {
 
            setLatestPatchVersion(latestPatchVersion[0]); // Set the latest patch version
 
-           //console.log(latestPatchVersion[0]); // Debugging
-
 
            const Set13 = await fetch('https://ddragon.leagueoflegends.com/cdn/15.6.1/data/en_GB/tft-champion.json');
 
@@ -184,8 +120,8 @@ function App() {
           
 
            if(!Set13.ok || !CurrentSet.ok || !tacticianResponse.ok){
-             throw new Error("Could not fetch the requested JSON:" + Set13.status + " " + CurrentSet.status + " " + tacticianResponse.status);
-   
+             throw new Error(`Could not fetch the requested Set data: ${Set13.status} ${CurrentSet.status} ${tacticianResponse.status}`);
+            
    
            }
           
@@ -199,9 +135,6 @@ function App() {
            setChampionJSON(Set13JSON);
            setCurrentChampionJSON(CurrentSetJSON);
            setTacticianJSON(tactician);
-           
-           
-
          
         }catch(error){
           console.error("Error fetching JSON data:", error);
@@ -267,9 +200,7 @@ function App() {
     } 
 
 
-    function getTraitImage(traitID){
-        
-    }
+    
   
 
   return (
@@ -288,17 +219,6 @@ function App() {
 
           </select> 
           </div>
-
-
-
-
-
-          
-
-           
-
-          
-          
           </header>
 
           
@@ -526,6 +446,8 @@ function App() {
               :
               "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
               
+
+
               let unitborder = "border-gray-400";
 
 
@@ -548,17 +470,78 @@ function App() {
                     default:
                       unitborder = "border-gray-400";
                   }
+
+              let unitName = units.character_id;
+                try {
+                  if (units.character_id.startsWith("TFT14") && currentChampionJson) {
+                    const champObj = currentChampionJson.data[
+                      "Maps/Shipping/Map22/Sets/TFTSet14/Shop/" + units.character_id
+                    ];
+                    if (champObj && champObj.name) unitName  = champObj.name;
+                  } else if (units.character_id.startsWith("TFT13") && championJson) {
+                    const champObj = championJson.data[
+                      "Maps/Shipping/Map22/Sets/TFTSet13/Shop/" + units.character_id
+                    ];
+                    if (champObj && champObj.name) unitName  = champObj.name;
+                  }
+                } catch (e) {
+                  // fallback to character_id
+                }
               
               return (
-                <img
-                  className = {`rounded-md border-[5px] ${unitborder} h-32 w-32`}
-                  key={unitIndex}
-                  src={championImageSrc}
-                  alt={`${units.character_id || "Unknown"}`}
-                  loading="lazy"
-                  
-                  
-                />
+               
+
+                  <div key={unitIndex} className="flex flex-col items-center">
+ 
+    <div className="flex mb-1 select-none">
+    {Array.from({ length: units.tier }).map((_, i) => (
+        <span
+          key={i}
+          className={
+            units.tier === 1
+              ? "text-transparent"
+              : units.tier === 2
+              ? "text-gray-400"
+              : units.tier === 3
+              ? "text-yellow-400"
+              : units.tier >= 4
+              ? "text-sky-400"
+              : "text-gray-400"
+          }
+        style={{ fontSize: "1.2rem", marginRight: "1px" }}
+      > 
+
+        
+        ★
+      </span>
+    ))}
+  </div>
+  <img
+    className={`rounded-md border-[5px] ${unitborder} h-32 w-32`}
+    src={championImageSrc}
+    alt={`${units.character_id}`}
+    loading="lazy"
+  />
+  <span className="flex flex-row flex-wrap justify-center gap-1 mt-1">
+  {units.itemNames && units.itemNames.length > 0 &&
+    units.itemNames.map((itemName, idx) => (
+      <img
+        key={idx}
+        src={`https://ddragon.leagueoflegends.com/cdn/${latestPatch}/img/tft-item/${itemName}.png`}
+        alt={itemName}
+        className="rounded-md border-5 w-8 h-8 inline-block"
+        loading="lazy"
+      />
+    ))
+  }
+</span>
+</div>
+
+                
+            
+                
+
+                
               );
             })}
                 </div>
