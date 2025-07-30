@@ -177,23 +177,18 @@ function App() {
         
     
         if(championIDPath.includes('TFT14') ){
-          return currentChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet14/Shop/' + championIDPath].image.full;
+          return `https://raw.communitydragon.org/15.15/game/assets/characters/${championIDPath.toLowerCase()}/hud/${championIDPath.toLowerCase()}_square.tft_set14.png`;
              
 
 
         } else if(championIDPath.includes('TFT13')){
-          //console.log(championIDPath);
-          return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
+   
+          return `https://raw.communitydragon.org/15.15/game/assets/characters/${championIDPath.toLowerCase()}/hud/${championIDPath.toLowerCase()}_square.tft_set13.png`;
           
           
         } else if (championIDPath.includes('TFT15')) {
 
-          if(championIDPath.includes('TFT15_Leesin')) {
-            return fifteenChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet15/Shop/TFT15_LeeSin'].image.full;
-          } 
-        
-        
-          return fifteenChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet15/Shop/' + championIDPath].image.full;
+          return `https://raw.communitydragon.org/15.15/game/assets/characters/${championIDPath.toLowerCase()}/hud/${championIDPath.toLowerCase()}_square.tft_set15.png`;
 
         }
       
@@ -317,75 +312,7 @@ function App() {
          
              
 
-       {/* {matchList.map((matchData, index) =>
-  <div key={index}>
-
-
-
-    <div className = "font-Montserrat text-yellow-600 mb-10">
-      <p>{unixToDate(matchData.info.game_datetime)}</p>
-      <p>Game Duration: {secondsToMinute(matchData.info.game_length)}</p>
-      </div>
-
-      <div >
-         {matchData.info.participants.sort((a, b) => a.placement - b.placement).map((data) =>
-      <div className =  "grid grid-cols-5 h-20  content-start font-Montserrat text-gray-800 ">
        
-
-        <div className = "font-semibold font-montserrat ">{data.placement}</div>
-        <div className = "flex justify-start"> {data.riotIdGameName}</div>
-        <div className ='flex justify-start'>   
-        <img className = "rounded-md border-4 border-orange-200 border-x-orange-400 h-16 w-16"
-        src={"https://ddragon.leagueoflegends.com/cdn/"+latestPatch+"/img/tft-tactician/" + getTacticianImage(data.companion.item_ID)} 
-        alt="Tactician image" 
-         /> 
-        </div>  
-        <div class = "flex justify-start"> {secondsToMinute(data.time_eliminated)}</div>
-        <div className = "flex flex-row flex-wrap items-center gap-1"> {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id === "TFT13_Sion" 
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
-              : units.character_id === "TFT13_JayceSummon"
-              ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
-              : units.character_id === "TFT13_Viktor"
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Viktor.png"
-              : units.character_id === "TFT13_MissMage"
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
-              : units.character_id === "TFT13_Warwick"
-              ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
-              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
-              : units.character_id.includes('TFT14_Summon_Turret')
-              ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
-              :
-              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
-              return (
-                <img
-                  key={unitIndex}
-                  src={championImageSrc}
-                  alt={`${units.character_id || "Unknown"}`}
-                  width="64"
-                  height="64"
-                  
-                />
-              );
-            })}</div>
-
-        
-
-        
-    
-      </div>
-)}
-       
-        
-       
-
-
-        </div>
-    
-  </div>
-)}
-         */}
         
 
 
@@ -442,8 +369,8 @@ function App() {
               <td className = "p-3 text-sm text-gray-700 whitespace-nowrap gap-4">
               <div className = 'flex flex-wrap gap-4'>
               {data.units.map((units, unitIndex) => {
-              const championImageSrc = units.character_id === 
-              "TFT13_Sion" 
+              const championImageSrc = 
+              units.character_id === "TFT13_Sion" 
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Sion.png"
               : units.character_id === "TFT13_JayceSummon"
               ? "https://tfttracker-server.vercel.app/assets/TFT13_JayceSummon.png"
@@ -453,15 +380,15 @@ function App() {
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/Mel.png"
               : units.character_id === "TFT13_Warwick"
               ? "https://tfttracker-server.vercel.app/assets/TFT13_Warwick.png"
-              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
-              ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
               : units.character_id.includes('TFT14_Summon_Turret')
               ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
+              : units.character_id.includes('TFT13') || units.character_id.includes('tft13')
+              ? getChampionImage(units.character_id)
               : units.character_id.includes('TFT14')
-              ? `https://ddragon.leagueoflegends.com/cdn/15.14.1/img/tft-champion/` + getChampionImage(units.character_id)
+              ? getChampionImage(units.character_id)
               : units.character_id.includes('TFT15_Galio')
               ? `https://tfttracker-server.vercel.app/assets/mighty-mech.png`
-              : `https://ddragon.leagueoflegends.com/cdn/${latestPatch}/img/tft-champion/` + getChampionImage(units.character_id);
+              :  getChampionImage(units.character_id);
 
 
 
@@ -489,22 +416,7 @@ function App() {
                       unitborder = "border-gray-400";
                   }
 
-              let unitName = units.character_id;
-                try {
-                  if (units.character_id.startsWith("TFT14") && currentChampionJson) {
-                    const champObj = currentChampionJson.data[
-                      "Maps/Shipping/Map22/Sets/TFTSet14/Shop/" + units.character_id
-                    ];
-                    if (champObj && champObj.name) unitName  = champObj.name;
-                  } else if (units.character_id.startsWith("TFT13") && championJson) {
-                    const champObj = championJson.data[
-                      "Maps/Shipping/Map22/Sets/TFTSet13/Shop/" + units.character_id
-                    ];
-                    if (champObj && champObj.name) unitName  = champObj.name;
-                  }
-                } catch (e) {
-                  // fallback to character_id
-                }
+              
               
               return (
                
@@ -542,15 +454,25 @@ function App() {
   />
   <span className="flex flex-row flex-wrap justify-center gap-1 mt-1">
   {units.itemNames && units.itemNames.length > 0 &&
-    units.itemNames.map((itemName, idx) => (
-      <img
-        key={idx}
-        src={`https://ddragon.leagueoflegends.com/cdn/${latestPatch}/img/tft-item/${itemName}.png`}
-        alt={itemName}
-        className="rounded-md border-5 w-8 h-8 inline-block"
-        loading="lazy"
-      />
-    ))
+    units.itemNames.map((itemName, idx) => {
+      let itemPatch = latestPatch; // default
+      if (units.character_id.includes('TFT13')) {
+        itemPatch = '15.6.1';
+      } else if (units.character_id.includes('TFT14')) {
+        itemPatch = '15.14.1';
+      } else if (units.character_id.includes('TFT15')) {
+        itemPatch = '15.15.1';
+      }
+      return (
+        <img
+          key={idx}
+          src={`https://ddragon.leagueoflegends.com/cdn/${itemPatch}/img/tft-item/${itemName}.png`}
+          alt={itemName}
+          className="rounded-md border-5 w-8 h-8 inline-block"
+          loading="lazy"
+        />
+      );
+    })
   }
 </span>
 </div>
