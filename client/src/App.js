@@ -13,15 +13,14 @@ function App() {
   const [matchList, setMatchList] = useState([]) // store match data
   const [rankedData, setRankedData] = useState([]) // store ranked data
   const [summonerData, setSummonerData] = useState([]) // store summoner data
-  const [doubleUpData, setDoubleUpData] = useState([]) // store double up data
 
 
 
   const [server, setServer] = useState("europe"); // store server data
-  const [rankedSelection, setRankedSelection] = useState("ranked"); // store ranked selection data
 
   const [championJson, setChampionJSON] = useState(null);
   const [currentChampionJson, setCurrentChampionJSON] = useState(null);
+  const [fifteenChampionJson, set15ChampionJSON] = useState(null);
   const [tacticianJSON, setTacticianJSON] = useState(null);
   const [latestPatch, setLatestPatchVersion] = useState(null);
 
@@ -46,11 +45,11 @@ function App() {
     }
     
 
-    axios.get(allDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    axios.get(allData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       setMatchList(res.data.matchList);
       setSummonerData(res.data.summonerData);
-      setDoubleUpData(res.data.tftDoubleUpRankedData);
+    
       setRankedData(res.data.tftRankedData);
     }).catch(error => {
       if (error.response && error.response.status === 429) {
@@ -113,27 +112,32 @@ function App() {
 
            
 
-           const CurrentSet = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
+           const Set14 = await fetch('https://ddragon.leagueoflegends.com/cdn/15.14.1/data/en_GB/tft-champion.json');
+
+
+
+           const Set15 = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-champion.json');
 
            const tacticianResponse = await fetch('https://ddragon.leagueoflegends.com/cdn/'+latestPatchVersion[0]+'/data/en_GB/tft-tactician.json');
 
           
 
-           if(!Set13.ok || !CurrentSet.ok || !tacticianResponse.ok){
-             throw new Error(`Could not fetch the requested Set data: ${Set13.status} ${CurrentSet.status} ${tacticianResponse.status}`);
-            
-   
+           if(!Set13.ok || !Set14.ok || !Set15.ok || !tacticianResponse.ok){
+             throw new Error(`Could not fetch the requested Set data: ${Set13.status} ${Set14.status} ${tacticianResponse.status}`);
+
            }
           
           
    
            const Set13JSON = await Set13.json();
-           const CurrentSetJSON = await CurrentSet.json(); // retrieve the current set's champion data/assets
+           const Set14JSON = await Set14.json(); // retrieve the current set's champion data/assets
+           const Set15JSON = await Set15.json(); // retrieve the current set's champion data/assets
            const tactician = await tacticianResponse.json();
            
            
            setChampionJSON(Set13JSON);
-           setCurrentChampionJSON(CurrentSetJSON);
+           setCurrentChampionJSON(Set14JSON);
+           set15ChampionJSON(Set15JSON);
            setTacticianJSON(tactician);
          
         }catch(error){
@@ -165,9 +169,12 @@ function App() {
           
         const seventhChar = remainingLetters.charAt(3).toUpperCase() + remainingLetters.slice(4); // Capitalize the 7th character
     
+        
+        
         const championIDPath = first3CharsCapitalized + remainingLetters.slice(0,3) + seventhChar; 
-
-
+        
+        
+        
     
         if(championIDPath.includes('TFT14') ){
           return currentChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet14/Shop/' + championIDPath].image.full;
@@ -179,10 +186,17 @@ function App() {
           return championJson.data['Maps/Shipping/Map22/Sets/TFTSet13/Shop/' + championIDPath].image.full;
           
           
+        } else if (championIDPath.includes('TFT15')) {
+
+          if(championIDPath.includes('TFT15_Leesin')) {
+            return fifteenChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet15/Shop/TFT15_LeeSin'].image.full;
+          } 
+        
+        
+          return fifteenChampionJson.data['Maps/Shipping/Map22/Sets/TFTSet15/Shop/' + championIDPath].image.full;
+
         }
-       
-
-
+      
 
       }catch (error){
          
@@ -443,9 +457,13 @@ function App() {
               ? "https://ddragon.leagueoflegends.com/cdn/15.6.1/img/tft-champion/" + getChampionImage(units.character_id)
               : units.character_id.includes('TFT14_Summon_Turret')
               ? "https://tfttracker-server.vercel.app/assets/TFT14_Summon_Turret.png"
-              :
-              "https://ddragon.leagueoflegends.com/cdn/15.7.1/img/tft-champion/" + getChampionImage(units.character_id);
-              
+              : units.character_id.includes('TFT14')
+              ? `https://ddragon.leagueoflegends.com/cdn/15.14.1/img/tft-champion/` + getChampionImage(units.character_id)
+              : units.character_id.includes('TFT15_Galio')
+              ? `https://tfttracker-server.vercel.app/assets/mighty-mech.png`
+              : `https://ddragon.leagueoflegends.com/cdn/${latestPatch}/img/tft-champion/` + getChampionImage(units.character_id);
+
+
 
 
               let unitborder = "border-gray-400";
