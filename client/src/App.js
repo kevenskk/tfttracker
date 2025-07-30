@@ -45,7 +45,7 @@ function App() {
     }
     
 
-    axios.get(allData, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
+    axios.get(allDataVercel, {params: {summonerName: summonerName, tagLine: tagLine, server: server}})
     .then(res => {
       setMatchList(res.data.matchList);
       setSummonerData(res.data.summonerData);
